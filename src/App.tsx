@@ -12,6 +12,10 @@ import WordToPdfPage from './pages/tools/WordToPdfPage';
 import PdfToJpgPage from './pages/tools/PdfToJpgPage';
 import JpgToPdfPage from './pages/tools/JpgToPdfPage';
 import CompressPdfPage from './pages/tools/CompressPdfPage';
+import PdfToExcelPage from './pages/tools/PdfToExcelPage';
+import SignPdfPage from './pages/tools/SignPdfPage';
+import BlogEditor from './pages/admin/BlogEditor';
+import BlogList from './pages/admin/BlogList';
 
 function App() {
   return (
@@ -24,10 +28,15 @@ function App() {
         <Route path="ferramentas/pdf-para-jpg" element={<PdfToJpgPage />} />
         <Route path="ferramentas/jpg-para-pdf" element={<JpgToPdfPage />} />
         <Route path="ferramentas/comprimir-pdf" element={<CompressPdfPage />} />
+        <Route path="ferramentas/pdf-para-excel" element={<PdfToExcelPage />} />
+        <Route path="ferramentas/assinar-pdf" element={<SignPdfPage />} />
         <Route path="blog" element={<BlogPage />} />
         <Route path="blog/:slug" element={<BlogPostPage />} />
         <Route path="sobre" element={<AboutPage />} />
         <Route path="contato" element={<ContactPage />} />
+        <Route path="admin/blog" element={<BlogList />} />
+        <Route path="admin/blog/new" element={<BlogEditor />} />
+        <Route path="admin/blog/edit/:id" element={<BlogEditor />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
