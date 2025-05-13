@@ -1,4 +1,4 @@
-import { FileText, FileOutput, Image, FileImage, FileArchive, FilePlus, FileMinus, FileSearch, FileCheck, FileWarning } from 'lucide-react';
+import { FileText, FileOutput, Image, FileImage, FileArchive, FileSpreadsheet, FileSignature } from 'lucide-react';
 import SEO from '../components/SEO';
 import ToolCard from '../components/ToolCard';
 
@@ -40,39 +40,18 @@ const ToolsPage = () => {
       color: 'text-red-500',
     },
     {
-      title: 'Mesclar PDFs',
-      description: 'Combine múltiplos arquivos PDF em um único documento.',
-      icon: FilePlus,
-      to: '/ferramentas/mesclar-pdf',
+      title: 'PDF para Excel',
+      description: 'Converta tabelas de PDF para planilhas Excel editáveis.',
+      icon: FileSpreadsheet,
+      to: '/ferramentas/pdf-para-excel',
+      color: 'text-green-500',
+    },
+    {
+      title: 'Assinar PDF',
+      description: 'Assine documentos PDF com certificado digital de forma segura.',
+      icon: FileSignature,
+      to: '/ferramentas/assinar-pdf',
       color: 'text-indigo-500',
-    },
-    {
-      title: 'Dividir PDF',
-      description: 'Separe um arquivo PDF em múltiplos documentos menores.',
-      icon: FileMinus,
-      to: '/ferramentas/dividir-pdf',
-      color: 'text-yellow-500',
-    },
-    {
-      title: 'OCR PDF',
-      description: 'Converta PDFs escaneados em texto pesquisável.',
-      icon: FileSearch,
-      to: '/ferramentas/ocr-pdf',
-      color: 'text-cyan-500',
-    },
-    {
-      title: 'Proteger PDF',
-      description: 'Adicione senha e restrições aos seus documentos PDF.',
-      icon: FileCheck,
-      to: '/ferramentas/proteger-pdf',
-      color: 'text-lime-500',
-    },
-    {
-      title: 'Remover Senha PDF',
-      description: 'Remova senhas e restrições de documentos PDF.',
-      icon: FileWarning,
-      to: '/ferramentas/remover-senha-pdf',
-      color: 'text-pink-500',
     },
   ];
 
