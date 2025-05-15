@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { FileSignature, Download, CheckCircle, AlertCircle, Upload } from 'lucide-react';
-import { useAuthStore } from '../../stores/authStore';
+import { FileSignature, Download, CheckCircle, AlertCircle } from 'lucide-react';
 import SEO from '../../components/SEO';
 import FileUploader from '../../components/FileUploader';
 
 const SignPdfPage = () => {
-  const { user } = useAuthStore();
   const [files, setFiles] = useState<File[]>([]);
   const [certificate, setCertificate] = useState<File | null>(null);
   const [signing, setSigning] = useState(false);
@@ -25,11 +23,6 @@ const SignPdfPage = () => {
   };
 
   const handleSign = () => {
-    if (!user) {
-      setError('Por favor, faça login para assinar documentos.');
-      return;
-    }
-
     if (files.length === 0) {
       setError('Por favor, selecione um arquivo PDF para assinar.');
       return;
@@ -86,107 +79,89 @@ const SignPdfPage = () => {
       <section className="py-12 bg-gray-50">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto">
-            {!user ? (
-              <div className="bg-white rounded-lg shadow-md p-6 md:p-8 text-center">
-                <h2 className="text-2xl font-bold mb-4">Faça login para continuar</h2>
-                <p className="text-gray-600 mb-6">
-                  Para usar esta ferramenta, você precisa fazer login ou criar uma conta.
+            <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
+              <div className="mb-8">
+                <div className="flex items-center mb-4">
+                  <FileSignature className="h-6 w-6 text-indigo-600 mr-2" />
+                  <h2 className="text-2xl font-bold">Assinar PDF</h2>
+                </div>
+                <p className="text-gray-600">
+                  Faça o upload do seu arquivo PDF e do seu certificado digital para assinar o documento.
+                  A assinatura digital garante a autenticidade e integridade do documento.
                 </p>
-                <div className="flex justify-center gap-4">
-                  <a href="/login" className="btn btn-primary">
-                    Fazer Login
-                  </a>
-                  <a href="/signup" className="btn btn-outline">
-                    Criar Conta
-                  </a>
-                </div>
               </div>
-            ) : (
-              <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
-                <div className="mb-8">
-                  <div className="flex items-center mb-4">
-                    <FileSignature className="h-6 w-6 text-indigo-600 mr-2" />
-                    <h2 className="text-2xl font-bold">Assinar PDF</h2>
-                  </div>
-                  <p className="text-gray-600">
-                    Faça o upload do seu arquivo PDF e do seu certificado digital para assinar o documento.
-                    A assinatura digital garante a autenticidade e integridade do documento.
-                  </p>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Documento PDF
+                  </label>
+                  <FileUploader
+                    acceptedFileTypes={{ 'application/pdf': ['.pdf'] }}
+                    maxFiles={1}
+                    maxSize={10485760} // 10MB
+                    onFilesSelected={handleFilesSelected}
+                    label="Arraste e solte seu arquivo PDF aqui, ou clique para selecionar"
+                  />
                 </div>
 
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Documento PDF
-                    </label>
-                    <FileUploader
-                      acceptedFileTypes={{ 'application/pdf': ['.pdf'] }}
-                      maxFiles={1}
-                      maxSize={10485760} // 10MB
-                      onFilesSelected={handleFilesSelected}
-                      label="Arraste e solte seu arquivo PDF aqui, ou clique para selecionar"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Certificado Digital
-                    </label>
-                    <FileUploader
-                      acceptedFileTypes={{
-                        'application/x-pkcs12': ['.pfx', '.p12'],
-                        'application/x-x509-ca-cert': ['.cer', '.crt']
-                      }}
-                      maxFiles={1}
-                      maxSize={1048576} // 1MB
-                      onFilesSelected={handleCertificateSelected}
-                      label="Selecione seu certificado digital (.pfx, .p12, .cer, .crt)"
-                    />
-                  </div>
-
-                  {error && (
-                    <div className="flex items-center text-red-600 bg-red-50 p-3 rounded-md">
-                      <AlertCircle className="h-5 w-5 mr-2" />
-                      <span>{error}</span>
-                    </div>
-                  )}
-
-                  <button
-                    onClick={handleSign}
-                    disabled={files.length === 0 || !certificate || signing || signed}
-                    className={`w-full btn ${
-                      files.length === 0 || !certificate || signing || signed
-                        ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-                        : 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500'
-                    }`}
-                  >
-                    {signing ? 'Assinando...' : 'Assinar Documento'}
-                  </button>
-
-                  {signed && (
-                    <div className="mt-6 space-y-4">
-                      <div className="flex items-center text-green-600 bg-green-50 p-3 rounded-md">
-                        <CheckCircle className="h-5 w-5 mr-2" />
-                        <span>Documento assinado com sucesso!</span>
-                      </div>
-                      <button
-                        onClick={handleDownload}
-                        className="w-full btn bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500 flex items-center justify-center"
-                      >
-                        <Download className="h-5 w-5 mr-2" />
-                        Baixar PDF Assinado
-                      </button>
-                    </div>
-                  )}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Certificado Digital
+                  </label>
+                  <FileUploader
+                    acceptedFileTypes={{
+                      'application/x-pkcs12': ['.pfx', '.p12'],
+                      'application/x-x509-ca-cert': ['.cer', '.crt']
+                    }}
+                    maxFiles={1}
+                    maxSize={1048576} // 1MB
+                    onFilesSelected={handleCertificateSelected}
+                    label="Selecione seu certificado digital (.pfx, .p12, .cer, .crt)"
+                  />
                 </div>
+
+                {error && (
+                  <div className="flex items-center text-red-600 bg-red-50 p-3 rounded-md">
+                    <AlertCircle className="h-5 w-5 mr-2" />
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                <button
+                  onClick={handleSign}
+                  disabled={files.length === 0 || !certificate || signing || signed}
+                  className={`w-full btn ${
+                    files.length === 0 || !certificate || signing || signed
+                      ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+                      : 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500'
+                  }`}
+                >
+                  {signing ? 'Assinando...' : 'Assinar Documento'}
+                </button>
+
+                {signed && (
+                  <div className="mt-6 space-y-4">
+                    <div className="flex items-center text-green-600 bg-green-50 p-3 rounded-md">
+                      <CheckCircle className="h-5 w-5 mr-2" />
+                      <span>Documento assinado com sucesso!</span>
+                    </div>
+                    <button
+                      onClick={handleDownload}
+                      className="w-full btn bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500 flex items-center justify-center"
+                    >
+                      <Download className="h-5 w-5 mr-2" />
+                      Baixar PDF Assinado
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
 
             {/* Instructions */}
             <div className="mt-8 bg-white rounded-lg shadow-md p-6 md:p-8">
               <h3 className="text-xl font-semibold mb-4">Como assinar um PDF</h3>
               <ol className="space-y-3 text-gray-600 list-decimal pl-5">
-                <li>Faça login ou crie uma conta para acessar a ferramenta.</li>
                 <li>Faça o upload do arquivo PDF que deseja assinar.</li>
                 <li>Selecione seu certificado digital (.pfx, .p12, .cer ou .crt).</li>
                 <li>Clique no botão "Assinar Documento" para iniciar o processo.</li>

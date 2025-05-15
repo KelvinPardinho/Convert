@@ -2,10 +2,8 @@ import { useState } from 'react';
 import { FileSpreadsheet, Download, CheckCircle, AlertCircle } from 'lucide-react';
 import SEO from '../../components/SEO';
 import FileUploader from '../../components/FileUploader';
-import { useAuthStore } from '../../stores/authStore';
 
 const PdfToExcelPage = () => {
-  const { user } = useAuthStore();
   const [files, setFiles] = useState<File[]>([]);
   const [converting, setConverting] = useState(false);
   const [converted, setConverted] = useState(false);
@@ -18,11 +16,6 @@ const PdfToExcelPage = () => {
   };
 
   const handleConvert = () => {
-    if (!user) {
-      setError('Por favor, faça login para converter arquivos.');
-      return;
-    }
-
     if (files.length === 0) {
       setError('Por favor, selecione um arquivo PDF para converter.');
       return;
@@ -74,86 +67,68 @@ const PdfToExcelPage = () => {
       <section className="py-12 bg-gray-50">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto">
-            {!user ? (
-              <div className="bg-white rounded-lg shadow-md p-6 md:p-8 text-center">
-                <h2 className="text-2xl font-bold mb-4">Faça login para continuar</h2>
-                <p className="text-gray-600 mb-6">
-                  Para usar esta ferramenta, você precisa fazer login ou criar uma conta.
+            <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
+              <div className="mb-8">
+                <div className="flex items-center mb-4">
+                  <FileSpreadsheet className="h-6 w-6 text-green-600 mr-2" />
+                  <h2 className="text-2xl font-bold">PDF para Excel</h2>
+                </div>
+                <p className="text-gray-600">
+                  Faça o upload do seu arquivo PDF contendo tabelas e converta-o para uma planilha Excel editável.
+                  Nossa ferramenta preserva o layout e formatação das tabelas.
                 </p>
-                <div className="flex justify-center gap-4">
-                  <a href="/login" className="btn btn-primary">
-                    Fazer Login
-                  </a>
-                  <a href="/signup" className="btn btn-outline">
-                    Criar Conta
-                  </a>
-                </div>
               </div>
-            ) : (
-              <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
-                <div className="mb-8">
-                  <div className="flex items-center mb-4">
-                    <FileSpreadsheet className="h-6 w-6 text-green-600 mr-2" />
-                    <h2 className="text-2xl font-bold">PDF para Excel</h2>
+
+              <div className="space-y-6">
+                <FileUploader
+                  acceptedFileTypes={{ 'application/pdf': ['.pdf'] }}
+                  maxFiles={1}
+                  maxSize={10485760} // 10MB
+                  onFilesSelected={handleFilesSelected}
+                  label="Arraste e solte seu arquivo PDF aqui, ou clique para selecionar"
+                />
+
+                {error && (
+                  <div className="flex items-center text-red-600 bg-red-50 p-3 rounded-md">
+                    <AlertCircle className="h-5 w-5 mr-2" />
+                    <span>{error}</span>
                   </div>
-                  <p className="text-gray-600">
-                    Faça o upload do seu arquivo PDF contendo tabelas e converta-o para uma planilha Excel editável.
-                    Nossa ferramenta preserva o layout e formatação das tabelas.
-                  </p>
-                </div>
+                )}
 
-                <div className="space-y-6">
-                  <FileUploader
-                    acceptedFileTypes={{ 'application/pdf': ['.pdf'] }}
-                    maxFiles={1}
-                    maxSize={10485760} // 10MB
-                    onFilesSelected={handleFilesSelected}
-                    label="Arraste e solte seu arquivo PDF aqui, ou clique para selecionar"
-                  />
+                <button
+                  onClick={handleConvert}
+                  disabled={files.length === 0 || converting || converted}
+                  className={`w-full btn ${
+                    files.length === 0 || converting || converted
+                      ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+                      : 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500'
+                  }`}
+                >
+                  {converting ? 'Convertendo...' : 'Converter para Excel'}
+                </button>
 
-                  {error && (
-                    <div className="flex items-center text-red-600 bg-red-50 p-3 rounded-md">
-                      <AlertCircle className="h-5 w-5 mr-2" />
-                      <span>{error}</span>
+                {converted && (
+                  <div className="mt-6 space-y-4">
+                    <div className="flex items-center text-green-600 bg-green-50 p-3 rounded-md">
+                      <CheckCircle className="h-5 w-5 mr-2" />
+                      <span>Conversão concluída com sucesso!</span>
                     </div>
-                  )}
-
-                  <button
-                    onClick={handleConvert}
-                    disabled={files.length === 0 || converting || converted}
-                    className={`w-full btn ${
-                      files.length === 0 || converting || converted
-                        ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-                        : 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500'
-                    }`}
-                  >
-                    {converting ? 'Convertendo...' : 'Converter para Excel'}
-                  </button>
-
-                  {converted && (
-                    <div className="mt-6 space-y-4">
-                      <div className="flex items-center text-green-600 bg-green-50 p-3 rounded-md">
-                        <CheckCircle className="h-5 w-5 mr-2" />
-                        <span>Conversão concluída com sucesso!</span>
-                      </div>
-                      <button
-                        onClick={handleDownload}
-                        className="w-full btn bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 flex items-center justify-center"
-                      >
-                        <Download className="h-5 w-5 mr-2" />
-                        Baixar arquivo Excel
-                      </button>
-                    </div>
-                  )}
-                </div>
+                    <button
+                      onClick={handleDownload}
+                      className="w-full btn bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 flex items-center justify-center"
+                    >
+                      <Download className="h-5 w-5 mr-2" />
+                      Baixar arquivo Excel
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
 
             {/* Instructions */}
             <div className="mt-8 bg-white rounded-lg shadow-md p-6 md:p-8">
               <h3 className="text-xl font-semibold mb-4">Como converter PDF para Excel</h3>
               <ol className="space-y-3 text-gray-600 list-decimal pl-5">
-                <li>Faça login ou crie uma conta para acessar a ferramenta.</li>
                 <li>Faça o upload do seu arquivo PDF usando o botão acima.</li>
                 <li>Clique no botão "Converter para Excel" para iniciar a conversão.</li>
                 <li>Aguarde a conclusão do processo de conversão.</li>
