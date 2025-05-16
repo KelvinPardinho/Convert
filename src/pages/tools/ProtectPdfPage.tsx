@@ -8,13 +8,13 @@ const ProtectPdfPage = () => {
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [protecting, setProtecting] = useState(false);
-  const [protected, setProtected] = useState(false);
+  const [isProtected, setIsProtected] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleFileSelected = (selectedFiles: File[]) => {
     if (selectedFiles.length > 0) {
       setFile(selectedFiles[0]);
-      setProtected(false);
+      setIsProtected(false);
       setError(null);
     }
   };
@@ -46,7 +46,7 @@ const ProtectPdfPage = () => {
     // Simulação de proteção (em um app real, isso seria substituído pela lógica de proteção)
     setTimeout(() => {
       setProtecting(false);
-      setProtected(true);
+      setIsProtected(true);
     }, 2000);
   };
 
@@ -144,9 +144,9 @@ const ProtectPdfPage = () => {
 
                 <button
                   onClick={handleProtect}
-                  disabled={!file || !password || protecting || protected}
+                  disabled={!file || !password || protecting || isProtected}
                   className={`w-full btn ${
-                    !file || !password || protecting || protected
+                    !file || !password || protecting || isProtected
                       ? 'bg-gray-300 cursor-not-allowed text-gray-500'
                       : 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500'
                   }`}
@@ -154,7 +154,7 @@ const ProtectPdfPage = () => {
                   {protecting ? 'Protegendo...' : 'Proteger PDF'}
                 </button>
 
-                {protected && (
+                {isProtected && (
                   <div className="mt-6 space-y-4">
                     <div className="flex items-center text-green-600 bg-green-50 p-3 rounded-md">
                       <CheckCircle className="h-5 w-5 mr-2" />
