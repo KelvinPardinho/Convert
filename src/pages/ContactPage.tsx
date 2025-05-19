@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Send, AlertCircle, CheckCircle } from 'lucide-react';
 import SEO from '../components/SEO';
+import { useThemeStore } from '../stores/themeStore';
+
+const ToolsPage = () => {
+  const { isDarkMode, toggleTheme } = useThemeStore();
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
