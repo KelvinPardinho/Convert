@@ -3,6 +3,10 @@ import { FileText, FileOutput, Image, FileImage, FileArchive } from 'lucide-reac
 import SEO from '../components/SEO';
 import ToolCard from '../components/ToolCard';
 import BlogCard from '../components/BlogCard';
+import { useThemeStore } from '../stores/themeStore';
+
+const ToolsPage = () => {
+  const { isDarkMode, toggleTheme } = useThemeStore();
 
 const HomePage = () => {
   const popularTools = [
