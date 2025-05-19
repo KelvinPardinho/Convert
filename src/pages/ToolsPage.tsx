@@ -6,6 +6,8 @@ import SEO from '../components/SEO';
 import ToolCard from '../components/ToolCard';
 import { useThemeStore } from '../stores/themeStore';
 
+const ToolsPage = () => {
+  const { isDarkMode, toggleTheme } = useThemeStore();
 
   const tools = [
     {
