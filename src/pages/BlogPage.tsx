@@ -3,6 +3,10 @@ import { Search } from 'lucide-react';
 import SEO from '../components/SEO';
 import BlogCard from '../components/BlogCard';
 import AdBanner from '../components/AdBanner';
+import { useThemeStore } from '../stores/themeStore';
+
+const ToolsPage = () => {
+  const { isDarkMode, toggleTheme } = useThemeStore();
 
 const BlogPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
