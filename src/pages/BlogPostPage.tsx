@@ -2,6 +2,10 @@ import { useParams } from 'react-router-dom';
 import { Calendar, Clock, Tag, Share2, Facebook, Twitter, Linkedin, Mail } from 'lucide-react';
 import SEO from '../components/SEO';
 import AdBanner from '../components/AdBanner';
+import { useThemeStore } from '../stores/themeStore';
+
+const ToolsPage = () => {
+  const { isDarkMode, toggleTheme } = useThemeStore();
 
 const BlogPostPage = () => {
   const { slug } = useParams<{ slug: string }>();
