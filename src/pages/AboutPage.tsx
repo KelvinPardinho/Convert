@@ -1,5 +1,9 @@
 import { FileText, Users, Award, Globe } from 'lucide-react';
 import SEO from '../components/SEO';
+import { useThemeStore } from '../stores/themeStore';
+
+const ToolsPage = () => {
+  const { isDarkMode, toggleTheme } = useThemeStore();
 
 const AboutPage = () => {
   return (
